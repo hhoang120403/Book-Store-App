@@ -18,7 +18,10 @@ const port = process.env.PORT || 4000;
 await connectDB(); // Connect MongoDB
 await connectCloudinary(); // Set up Cloudinary for image storage
 
-const allowedOrigins = [process.env.FRONTEND_SERVER];
+const allowedOrigins = [
+  process.env.FRONTEND_SERVER,
+  process.env.FRONTEND_SERVER_DEPLOY,
+];
 
 // Stripe Webhooks
 app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
