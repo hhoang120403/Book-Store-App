@@ -3,7 +3,7 @@ import bgHero from '../assets/bg-hero.png';
 import { Link } from 'react-router';
 import { FaArrowRight } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import type { Book } from '../lib/types.ts';
+import type { Book } from '../types/Book.ts';
 import Item from './Item.tsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import type { Book } from '../lib/types';
+import type { Book } from '../types/Book.ts';
 import Title from './Title';
 import Item from './Item.tsx';
 import { Swiper, SwiperSlide } from 'swiper/react';

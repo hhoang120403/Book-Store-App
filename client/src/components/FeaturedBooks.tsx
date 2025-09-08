@@ -1,12 +1,25 @@
-import { useSelector } from 'react-redux';
-import type { RootState } from '../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../redux/store';
 import Title from './Title';
 import { TbShoppingBagPlus } from 'react-icons/tb';
 import featuredBooksImg from '../assets/featured-books.png';
+import { addToCart } from '../redux/shop/shopSlice';
+import toast from 'react-hot-toast';
 
 const FeaturedBooks = () => {
-  const { books, currency } = useSelector((state: RootState) => state.shop);
-  const book = books[21];
+  const { books, currency, user } = useSelector(
+    (state: RootState) => state.shop
+  );
+  const book = books[0];
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleAddToCart = () => {
+    if (user) {
+      dispatch(addToCart(book._id));
+    } else {
+      toast.error('Please login before to add to cart');
+    }
+  };
 
   const para =
     'Browse featured books carefully selected for quality, imagination, storytelling, and unique characters';
@@ -28,7 +41,7 @@ const FeaturedBooks = () => {
           <div className='flex gap-3 sm:gap-8 sm:bg-white sm:p-4 rounded-2xl'>
             <div className='min-w-[160px]'>
               <img
-                src={book?.image}
+                src={book?.image[0]}
                 alt={book?.name}
                 className='h-64 w-44 object-cover rounded-xl shadow-[0px_0px_6px_0px_rgba(0,_0,_0,_0.1)]'
               />
@@ -73,7 +86,10 @@ const FeaturedBooks = () => {
               <p className='mt-1 sm:mt-4 text-gray-600 text-sm line-clamp-3'>
                 {book?.description}
               </p>
-              <button className='btn-secondary max-sm:text-xs mt-1 sm:mt-5 w-fit px-5 py-2 flex items-center gap-2 text-sm font-medium'>
+              <button
+                className='btn-secondary max-sm:text-xs mt-1 sm:mt-5 w-fit px-5 py-2 flex items-center gap-2 text-sm font-medium'
+                onClick={() => handleAddToCart()}
+              >
                 <TbShoppingBagPlus className='text-lg' />
                 Add to Cart
               </button>
@@ -88,9 +104,7 @@ const FeaturedBooks = () => {
           style={{
             backgroundImage: `url(${featuredBooksImg})`,
           }}
-        >
-          <div className=''></div>
-        </div>
+        ></div>
       </div>
     </section>
   );

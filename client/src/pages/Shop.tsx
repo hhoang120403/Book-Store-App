@@ -3,7 +3,7 @@ import Title from '../components/Title';
 import type { RootState } from '../redux/store';
 import Item from '../components/Item';
 import { useEffect, useState } from 'react';
-import type { Book } from '../lib/types';
+import type { Book } from '../types/Book';
 
 const Shop = () => {
   const { books, searchQuery } = useSelector((state: RootState) => state.shop);

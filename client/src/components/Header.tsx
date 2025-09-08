@@ -8,13 +8,23 @@ import { FaBarsStaggered } from 'react-icons/fa6';
 import { RiUserLine } from 'react-icons/ri';
 import type { AppDispatch, RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchQuery } from '../redux/shop/shopSlice';
+import {
+  clearCart,
+  selectCartCount,
+  setSearchQuery,
+  setShowUserLogin,
+  setUser,
+} from '../redux/shop/shopSlice';
+import axiosInstance from '../configs/axiosConfig';
+import type { ApiResponse } from '../types/apiResponse';
+import toast from 'react-hot-toast';
 
 const Header = () => {
   const [menuOpened, setMenuOpened] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { user, searchQuery } = useSelector((state: RootState) => state.shop);
   const dispatch = useDispatch<AppDispatch>();
+  const cartCount = useSelector(selectCartCount);
   const isShopPage = useLocation().pathname.endsWith('/shop');
 
   const navigate = useNavigate();
@@ -29,7 +39,23 @@ const Header = () => {
     setMenuOpened((prevState) => !prevState);
   };
 
-  const logoutUser = () => {};
+  const logoutUser = async () => {
+    try {
+      const { data } = await axiosInstance.post<ApiResponse>(
+        '/api/user/logout'
+      );
+      if (data.success) {
+        dispatch(setUser(null));
+        dispatch(clearCart());
+        navigate('/');
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <header className='absolute top-0 left-0 right-0 max-padd-container flexBetween gap-4 py-2'>
@@ -98,14 +124,24 @@ const Header = () => {
       </div>
 
       {/* Cart */}
-      <Link to='/cart' className='flex relative'>
+      <div
+        onClick={() => {
+          if (user) {
+            navigate('/cart');
+          } else {
+            toast.error('Please login before');
+            dispatch(setShowUserLogin(true));
+          }
+        }}
+        className='flex relative cursor-pointer'
+      >
         <div className='bold-16'>
           Cart{' '}
           <span className='bg-secondary text-white text-[12px] font-semibold absolute -top-3.5 -right-2 flexCenter w-4 h-4 rounded-full shadow-md'>
-            0
+            {cartCount}
           </span>
         </div>
-      </Link>
+      </div>
 
       {/* User Profile */}
       <div className='group relative'>
@@ -115,7 +151,10 @@ const Header = () => {
               <img src={userImg} alt='User Image' height={44} width={44} />
             </div>
           ) : (
-            <button className='btn-light flexCenter gap-x-2'>
+            <button
+              className='btn-light flexCenter gap-x-2'
+              onClick={() => dispatch(setShowUserLogin(true))}
+            >
               Login <RiUserLine className='text-xl' />
             </button>
           )}

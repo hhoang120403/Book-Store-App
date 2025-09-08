@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import type { RootState } from '../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../redux/store';
 import { Link, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import {
@@ -12,9 +12,13 @@ import { FaTruckFast } from 'react-icons/fa6';
 import ProductDescription from '../components/ProductDescription';
 import ProductFeatures from '../components/ProductFeatures';
 import RelatedBooks from '../components/RelatedBooks';
+import { addToCart } from '../redux/shop/shopSlice';
 
 const ProductDetails = () => {
-  const { books, currency } = useSelector((state: RootState) => state.shop);
+  const dispatch = useDispatch<AppDispatch>();
+  const { books, currency, cartItems } = useSelector(
+    (state: RootState) => state.shop
+  );
   const { id } = useParams();
 
   const book = books.find((book) => book._id === id);
@@ -26,6 +30,14 @@ const ProductDetails = () => {
       setImage(book.image[0]);
     }
   }, [book]);
+
+  useEffect(() => {
+    console.log(cartItems);
+  }, [cartItems]);
+
+  const handleAddToCart = (id: string) => {
+    dispatch(addToCart(id));
+  };
 
   return (
     book && (
@@ -86,7 +98,10 @@ const ProductDetails = () => {
             </div>
             <p className='max-w-[555px]'>{book.description}</p>
             <div className='flex items-center gap-x-4 mt-6'>
-              <button className='btn-dark sm:w-1/2 flexCenter gap-x-2 capitalize !rounded-md'>
+              <button
+                className='btn-dark sm:w-1/2 flexCenter gap-x-2 capitalize !rounded-md'
+                onClick={() => handleAddToCart(book._id)}
+              >
                 Add to Cart <TbShoppingBagPlus />
               </button>
               <button className='btn-secondary !rounded-md'>

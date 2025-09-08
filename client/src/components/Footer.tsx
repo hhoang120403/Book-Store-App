@@ -29,7 +29,11 @@ const Footer = () => {
         <div>
           {/* Logo */}
           <div className='flex flex-1'>
-            <Link to='/' className='bold-22 xl:bold-28 flex items-end gap-1'>
+            <Link
+              to='/'
+              className='bold-22 xl:bold-28 flex items-end gap-1'
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
               <img src={logoImg} className='h-9' />
               <div className='relative top-1.5'>
                 VBook<span className='text-secondary'>a.</span>

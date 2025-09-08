@@ -2,7 +2,7 @@ import Item from './Item.tsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { useEffect, useState } from 'react';
-import { type Book } from '../lib/types.ts';
+import { type Book } from '../types/Book.ts';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store.ts';
 import Title from './Title.tsx';

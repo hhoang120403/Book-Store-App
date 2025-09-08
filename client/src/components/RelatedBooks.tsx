@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Book } from '../lib/types';
+import type { Book } from '../types/Book.ts';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
 import Item from './Item.tsx';
