@@ -185,7 +185,7 @@ export const stripeWebhooks = async (req, res) => {
   // Stripe gateway initialization
   const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
-  const signature = req.headers('stripe-signature');
+  const signature = req.headers['stripe-signature'];
 
   let event;
 
@@ -207,7 +207,7 @@ export const stripeWebhooks = async (req, res) => {
 
       // Getting Session Metadata
       const session = await stripeInstance.checkout.sessions.list({
-        payment_itent: paymentIntentId,
+        payment_intent: paymentIntentId,
       });
 
       const { orderId, userId } = session.data[0].metadata;
