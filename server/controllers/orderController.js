@@ -226,7 +226,7 @@ export const stripeWebhooks = async (req, res) => {
 
       // Getting Session Metadata
       const session = await stripeInstance.checkout.sessions.list({
-        payment_itent: paymentIntentId,
+        payment_intent: paymentIntentId,
       });
 
       const { orderId } = session.data[0].metadata;
