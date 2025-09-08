@@ -241,9 +241,8 @@ export const stripeWebhooks = async (req, res) => {
       break;
   }
 
-  return res.json({
-    success: true,
-    message: '',
+  res.json({
+    received: true,
   });
 };
 
