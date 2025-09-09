@@ -4,10 +4,15 @@ import axiosInstance from '../../configs/axiosConfig';
 import type { ApiResponse } from '../../types/apiResponse';
 import { fetchBooks } from '../../redux/shop/shopSlice';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 const ProductList = () => {
   const { books, currency } = useSelector((state: RootState) => state.shop);
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchBooks());
+  }, [dispatch]);
 
   const toggleStock = async (productId: string, inStock: boolean) => {
     try {

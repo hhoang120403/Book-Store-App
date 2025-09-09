@@ -18,6 +18,18 @@ export const ProductSchema = z.object({
     .array(z.instanceof(File))
     .min(1, 'At least one image is required')
     .max(4, 'Maximum 4 images allowed'),
+  published: z
+    .string()
+    .regex(/^\d+$/, 'Published year must be a number')
+    .min(4, 'Published year is required'),
+  pages: z
+    .string()
+    .regex(/^\d+$/, 'Pages must be a number')
+    .min(1, 'Number of pages is required'),
+  language: z
+    .string()
+    .min(1, 'Language is required')
+    .regex(/^[A-Za-z\s]+$/, 'Language must contain only letters'),
 });
 
 export type ProductFormData = z.infer<typeof ProductSchema>;

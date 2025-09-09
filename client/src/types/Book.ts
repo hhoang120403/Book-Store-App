@@ -9,4 +9,7 @@ export interface Book {
   date: number;
   popular: boolean;
   inStock: boolean;
+  published: number;
+  pages: number;
+  language: string;
 }

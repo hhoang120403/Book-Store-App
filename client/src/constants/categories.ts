@@ -8,4 +8,5 @@ export const categories = [
   'Adventure',
   'ScienceFiction',
   'Novel',
+  'Story',
 ] as const;

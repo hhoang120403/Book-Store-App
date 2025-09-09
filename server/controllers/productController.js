@@ -17,8 +17,6 @@ export const addProduct = async (req, res) => {
       })
     );
 
-    console.log(productData);
-
     await Product.create({ ...productData, image: imagesUrl });
 
     res.status(201).json({
@@ -36,7 +34,7 @@ export const addProduct = async (req, res) => {
 
 export const listProduct = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       products,

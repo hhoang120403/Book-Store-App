@@ -9,8 +9,13 @@ import { categories } from '../../constants/categories';
 import axiosInstance from '../../configs/axiosConfig';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from '../../types/apiResponse';
+import { fetchBooks } from '../../redux/shop/shopSlice';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../redux/store';
 
 const AddProduct = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const {
     register,
     handleSubmit,
@@ -28,6 +33,9 @@ const AddProduct = () => {
       offerPrice: '',
       popular: false,
       files: [],
+      published: '',
+      pages: '',
+      language: '',
     },
   });
 
@@ -57,6 +65,7 @@ const AddProduct = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         reset();
+        dispatch(fetchBooks());
       } else {
         toast.error(res.data.message);
       }
@@ -72,11 +81,12 @@ const AddProduct = () => {
         className='flex flex-col gap-y-3 medium-14'
       >
         <div className='w-full'>
-          <h5 className='h5'>Product Name</h5>
+          <h5 className='h5'>Name</h5>
           <input
             {...register('name')}
             type='text'
             placeholder='Write here...'
+            disabled={isSubmitting}
             className='px-3 py-1.5 ring-1 ring-slate-900/10 rounded bg-white mt-1 w-full max-w-xl'
           />
           {errors.name && (
@@ -84,11 +94,12 @@ const AddProduct = () => {
           )}
         </div>
         <div className='w-full'>
-          <h5 className='h5'>Product Description</h5>
+          <h5 className='h5'>Description</h5>
           <textarea
             {...register('description')}
             rows={5}
             placeholder='Write here...'
+            disabled={isSubmitting}
             className='px-3 py-1.5 ring-1 ring-slate-900/10 rounded bg-white mt-1 w-full max-w-xl'
           />
           {errors.description && (
@@ -98,9 +109,55 @@ const AddProduct = () => {
         <div>
           <div className='flex gap-4'>
             <div>
-              <h5 className='h5'>Product Category</h5>
+              <h5 className='h5'>Pages</h5>
+              <input
+                {...register('pages')}
+                type='number'
+                placeholder='0'
+                disabled={isSubmitting}
+                className='px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1 max-w-24'
+              />
+            </div>
+            <div>
+              <h5 className='h5'>Published</h5>
+              <input
+                {...register('published')}
+                type='number'
+                placeholder='0'
+                disabled={isSubmitting}
+                className='px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1 max-w-24'
+              />
+            </div>
+            <div>
+              <h5 className='h5'>Languague</h5>
+              <input
+                {...register('language')}
+                type='text'
+                placeholder='Vietnamese'
+                disabled={isSubmitting}
+                className='px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1 max-w-24'
+              />
+            </div>
+          </div>
+          <div className='flex flex-col mt-2 gap-2'>
+            {errors.pages && (
+              <p className='text-red-500 text-sm'>{errors.pages.message}</p>
+            )}
+            {errors.published && (
+              <p className='text-red-500 text-sm'>{errors.published.message}</p>
+            )}
+            {errors.language && (
+              <p className='text-red-500 text-sm'>{errors.language.message}</p>
+            )}
+          </div>
+        </div>
+        <div>
+          <div className='flex gap-4'>
+            <div>
+              <h5 className='h5'>Category</h5>
               <select
                 {...register('category')}
+                disabled={isSubmitting}
                 className='max-w-30 px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1'
               >
                 {categories.map((cat) => (
@@ -111,11 +168,12 @@ const AddProduct = () => {
               </select>
             </div>
             <div>
-              <h5 className='h5'>Product Price</h5>
+              <h5 className='h5'>Price</h5>
               <input
                 {...register('price')}
                 type='number'
                 placeholder='0'
+                disabled={isSubmitting}
                 className='px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1 max-w-24'
               />
             </div>
@@ -125,6 +183,7 @@ const AddProduct = () => {
                 {...register('offerPrice')}
                 type='number'
                 placeholder='0'
+                disabled={isSubmitting}
                 className='px-3 py-2 ring-1 ring-slate-900/10 rounded bg-white mt-1 max-w-24'
               />
             </div>
@@ -156,15 +215,18 @@ const AddProduct = () => {
                     type='file'
                     id={`image${index}`}
                     hidden
+                    disabled={isSubmitting}
                     onChange={(e) => {
                       const newFiles = e.target.files
                         ? Array.from(e.target.files)
                         : [];
-                      const updatedFiles = [
-                        ...(files || []),
-                        ...newFiles,
-                      ].slice(0, 4);
-                      setValue('files', updatedFiles);
+                      if (newFiles.length > 0) {
+                        const updatedFiles = [...(files || [])];
+                        updatedFiles[index] = newFiles[0]; // thay thế ảnh ở vị trí index
+                        setValue('files', updatedFiles, {
+                          shouldValidate: true,
+                        });
+                      }
                     }}
                   />
                   <img
@@ -186,7 +248,12 @@ const AddProduct = () => {
           )}
         </div>
         <div className='flexStart gap-2 my-2'>
-          <input {...register('popular')} type='checkbox' id='popular' />
+          <input
+            {...register('popular')}
+            type='checkbox'
+            id='popular'
+            disabled={isSubmitting}
+          />
           <label htmlFor='popular' className='cursor-pointer'>
             Add to Popular
           </label>

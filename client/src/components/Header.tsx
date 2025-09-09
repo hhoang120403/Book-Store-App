@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import logoImg from '../assets/logo.png';
 import userImg from '../assets/user.png';
 import Navbar from './Navbar';
@@ -10,6 +10,7 @@ import type { AppDispatch, RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearCart,
+  fetchBooks,
   selectCartCount,
   setSearchQuery,
   setShowUserLogin,
@@ -61,12 +62,18 @@ const Header = () => {
     <header className='absolute top-0 left-0 right-0 max-padd-container flexBetween gap-4 py-2'>
       {/* Logo */}
       <div className='flex flex-1'>
-        <Link to='/' className='bold-22 xl:bold-28 flex items-end gap-2'>
+        <div
+          onClick={() => {
+            navigate('/');
+            dispatch(fetchBooks());
+          }}
+          className='bold-22 xl:bold-28 flex items-end gap-2 cursor-pointer'
+        >
           <img src={logoImg} alt='' className='hidden sm:block h-9' />
           <div className='sm:relative top-1.5'>
             Vbook<span className='text-secondary'>a.</span>
           </div>
-        </Link>
+        </div>
       </div>
 
       {/* Navbar for Mobile and Desktop */}
